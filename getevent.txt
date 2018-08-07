@@ -1,0 +1,56 @@
+OnePlus3T:/ $
+OnePlus3T:/ $
+OnePlus3T:/ $
+OnePlus3T:/ $ su
+OnePlus3T:/ # getevent
+add device 1: /dev/input/event7
+  name:     "msm8996-tasha-mtp-snd-card Button Jack"
+add device 2: /dev/input/event6
+  name:     "msm8996-tasha-mtp-snd-card Headset Jack"
+add device 3: /dev/input/event2
+  name:     "fpc1020"
+add device 4: /dev/input/event0
+  name:     "qpnp_pon"
+could not get driver version for /dev/input/mice, Not a typewriter
+add device 5: /dev/input/event1
+  name:     "tri-state-key"
+add device 6: /dev/input/event4
+  name:     "gpio-keys"
+add device 7: /dev/input/event3
+  name:     "synaptics"
+add device 8: /dev/input/event5
+  name:     "synaptics,s3320"
+/dev/input/event5: 0003 0039 00000905
+/dev/input/event5: 0003 0035 00000251
+/dev/input/event5: 0003 0036 0000032b
+/dev/input/event5: 0003 0030 00000004
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0031 00000004
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0031 00000003
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 00000252
+/dev/input/event5: 0003 0036 00000325
+/dev/input/event5: 0003 0031 00000004
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 00000253
+/dev/input/event5: 0003 0036 0000031e
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 00000254
+/dev/input/event5: 0003 0036 00000317
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 00000255
+/dev/input/event5: 0003 0036 00000310
+/dev/input/event5: 0003 0030 00000005
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 00000256
+/dev/input/event5: 0003 0036 00000307
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 00000258
+/dev/input/event5: 0003 0036 000002fe
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 0000025a
+/dev/input/event5: 0003 0036 000002f4
+/dev/input/event5: 0000 0000 00000000
+/dev/input/event5: 0003 0035 0000025c
+/dev/input/event5: 0003 0036 000002ea

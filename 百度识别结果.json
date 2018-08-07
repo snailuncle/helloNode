@@ -1,0 +1,123 @@
+{
+    "log_id": 3735486967088382000,
+    "words_result_num": 13,
+    "words_result": [
+        {
+            "location": {
+                "width": 73,
+                "top": 10,
+                "left": 556,
+                "height": 23
+            },
+            "words": "27kb/s"
+        },
+        {
+            "location": {
+                "width": 54,
+                "top": 0,
+                "left": 1005,
+                "height": 27
+            },
+            "words": "08"
+        },
+        {
+            "location": {
+                "width": 265,
+                "top": 169,
+                "left": 15,
+                "height": 55
+            },
+            "words": "累积分:口"
+        },
+        {
+            "location": {
+                "width": 100,
+                "top": 840,
+                "left": 110,
+                "height": 111
+            },
+            "words": "2"
+        },
+        {
+            "location": {
+                "width": 76,
+                "top": 578,
+                "left": 374,
+                "height": 626
+            },
+            "words": "341"
+        },
+        {
+            "location": {
+                "width": 92,
+                "top": 1095,
+                "left": 114,
+                "height": 108
+            },
+            "words": "3"
+        },
+        {
+            "location": {
+                "width": 87,
+                "top": 1095,
+                "left": 627,
+                "height": 108
+            },
+            "words": "2"
+        },
+        {
+            "location": {
+                "width": 93,
+                "top": 1319,
+                "left": 921,
+                "height": 45
+            },
+            "words": "玩沽"
+        },
+        {
+            "location": {
+                "width": 111,
+                "top": 1613,
+                "left": 68,
+                "height": 55
+            },
+            "words": "撒销"
+        },
+        {
+            "location": {
+                "width": 239,
+                "top": 1589,
+                "left": 418,
+                "height": 80
+            },
+            "words": "12"
+        },
+        {
+            "location": {
+                "width": 207,
+                "top": 1613,
+                "left": 851,
+                "height": 55
+            },
+            "words": "开启筛选"
+        },
+        {
+            "location": {
+                "width": 97,
+                "top": 1762,
+                "left": 80,
+                "height": 54
+            },
+            "words": "清除"
+        },
+        {
+            "location": {
+                "width": 389,
+                "top": 1768,
+                "left": 412,
+                "height": 81
+            },
+            "words": "34"
+        }
+    ]
+}
