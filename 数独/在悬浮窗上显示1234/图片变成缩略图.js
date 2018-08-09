@@ -8,7 +8,7 @@ importClass(java.io.File)
 importClass(java.io.FileOutputStream)
 importClass(java.lang.Integer)
 
-
+var intArrRW=require('./整数数组读写接口.js')
 var J = require("./J.js");
 
 
@@ -60,7 +60,7 @@ function getImgLattice(bitmap) {
 
   var pixels01 = pixels.map(function (value) {
     //一千万
-    if(value<-10000000){
+    if(value>-10000000){
       return -1
     }else{
       return -10000000
@@ -131,64 +131,31 @@ files.ensureDir(PathBasic);
 // PathBasic="/sdcard/数独/1234缩略图";
 // files.ensureDir(PathBasic);
 
-//遍历原始样本数据,将缩略图放到缩略图文件夹
 
-// 一共四个数字1234,四个文件夹
-speciesNumber=4
-for(let i=0;i<speciesNumber;i++){
-
-  let originalImgFolder=files.join(PathBasic, "1234原始样本数据/"+(i+1))
-  var allFile = files.listDir(originalImgFolder);
-  // console.log(originalImgFolder)
-  // /sdcard/数独/1234原始样本数据/2
-
-  var allFilePath = allFile.map(function (imgName) {
-    return files.join(originalImgFolder,imgName)
-  });
-
-  // console.log(allFilePath)
-  // [ '/sdcard/数独/1234原始样本数据/4/02.png',
-  // '/sdcard/数独/1234原始样本数据/4/10.png',
-  // '/sdcard/数独/1234原始样本数据/4/23.png',
-  // '/sdcard/数独/1234原始样本数据/4/31.png',
-  // '/sdcard/数独/1234原始样本数据/4/021533624454366.png',
-  // '/sdcard/数独/1234原始样本数据/4/021533624470063.png',
-  // '/sdcard/数独/1234原始样本数据/4/131533624389957.png',
-  // '/sdcard/数独/1234原始样本数据/4/131533624424600.png',
-  // '/sdcard/数独/1234原始样本数据/4/131533624440614.png',
-  // '/sdcard/数独/1234原始样本数据/4/201533624389957.png',
-  // '/sdcard/数独/1234原始样本数据/4/201533624424600.png',
-  // '/sdcard/数独/1234原始样本数据/4/201533624440614.png',
-  // '/sdcard/数独/1234原始样本数据/4/301533624454366.png',
-  // '/sdcard/数独/1234原始样本数据/4/301533624470063.png' ]
-
-  //将上面的所有路径的图片变为缩略图
-
-  ThumbnailPath=files.join(PathBasic, "1234缩略图/"+(i+1))
-  LatticePath=files.join(PathBasic, "1234矩阵信息/"+(i+1))
-  // console.log(ThumbnailPath)
-  k=0
-  allFilePath.forEach(imgPath => {
+var img2Thumbnail={}
+img2Thumbnail.getImgThumbnailAndLattice=function (imgPath){
     //先得到bitmap
     bitmap=getImgThumbnail(imgPath);
     //保存缩略图
-    imgThumbnailPath=ThumbnailPath+'/'+k+'.png'
+    var timestamp=new Date().getTime()
+    imgThumbnailPath='/sdcard/缩略图/'+timestamp+'.png'
     files.createWithDirs(imgThumbnailPath)
     saveBitmapToSDCard(bitmap, imgThumbnailPath);
     //得到点阵
     imgLattice=getImgLattice(bitmap);
     // console.log("imgLattice=",imgLattice)
-    numLatticePath=LatticePath+'/'+k+'.arr'
+    numLatticePath='/sdcard/字符矩阵/'+timestamp+'.arr'
     files.createWithDirs(numLatticePath)
-    files.writeBytes(numLatticePath, imgLattice)
-    k++;
-  });
-
-
-
-
-
+    intArrRW.write(imgLattice,numLatticePath)
+    thumbnail=images.read(imgThumbnailPath)
+    imgLatticeResult=imgLattice
+    result={
+      thumbnail:thumbnail,
+      lattice:imgLattice,
+      thumbnailPath:imgThumbnailPath,
+      latticePath:numLatticePath,
+    }
+  return result
 }
 
-// files.join(parent, child)
-// files.createWithDirs("/sdcard/新文件夹/新文件夹/新文件夹/1.txt");
+module.exports=img2Thumbnail
