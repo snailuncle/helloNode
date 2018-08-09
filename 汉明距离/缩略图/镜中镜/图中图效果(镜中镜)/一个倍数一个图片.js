@@ -8,62 +8,51 @@ importClass(java.io.File)
 importClass(java.io.FileOutputStream)
 importClass(java.lang.Integer)
 
-// import Java.io.ByteArrayOutputStream;
-// import java.io.FileOutputStream;
-// import java.io.IOException;
-// import java.io.InputStream;
-// import android.app.Activity;
-// import android.content.Context;
-// import android.content.res.AssetManager;
-// import android.database.Cursor;
-// import android.database.sqlite.SQLiteDatabase;
-// import android.database.sqlite.SQLiteDatabase.CursorFactory;
-// import android.database.sqlite.SQLiteOpenHelper;
-// import android.graphics.Bitmap;
-// import android.graphics.BitmapFactory;
-// import android.graphics.drawable.BitmapDrawable;
-// import android.graphics.drawable.Drawable;
-// import android.os.Bundle;
-// import android.os.Environment;
-// import android.util.Log;
-// import android.view.View;
-// import android.widget.Button;
-// import android.widget.ImageView;
-
-// import android.app.Activity;
-// import android.content.Context;
-// import android.graphics.Bitmap;
-// import android.graphics.BitmapFactory;
-// import android.graphics.Canvas;
-// import android.graphics.Matrix;
-// import android.os.Bundle;
-// import android.util.Log;
-// import android.view.MotionEvent;
-// import android.view.View;
-// import android.view.Window;
-// import android.view.WindowManager;
-// import android.view.View.OnTouchListener;
-// import android.widget.ImageView;
 
 
-// var J = require("./J.js");
-// var arr = J.array("int", 2);
-// arr[0] = 1;
-// log(arr);
+function typeToClass(type) {
+  if (typeof(type) != 'string') {
+      return type;
+  }
+  var types = {
+      "int": "Integer",
+      "long": "Long",
+      "string": "String",
+      "double": "Double",
+      "char": "Character",
+      "byte": "Byte",
+      "float": "Float"
+  };
+  if (types[type]) {
+      return Packages["java.lang." + types[type]].TYPE;
+  }
+  return Packages[type];
+}
 
+function array(type) {
+  var clazz = typeToClass(type);
+  var args = arguments;
+  args[0] = clazz;
+  return java.lang.reflect.Array.newInstance.apply(null, args);
+}
 
-var J = require("./J.js");
+J = {
+  "array": array
+};
+
+log("一个倍数一个图片J.array=",J.array)
 
 
 
 
-imgPathBigPic="/sdcard/数独/";
-files.ensureDir(imgPathBigPic);
-imgPathSmallPic="/sdcard/数独/数字缩略图/";
-files.ensureDir(imgPathSmallPic);
 
-originalPicPath=imgPathBigPic+33+"clip.png"
-ThumbnailPath=imgPathSmallPic+33+"clip.png"
+
+
+
+
+
+
+
 //首先要做缩略图,减少计算
 function getImgThumbnail(imagePath, width, height) {
   width=width || 8
@@ -87,6 +76,9 @@ function getImgThumbnail(imagePath, width, height) {
   options.inSampleSize = scale;
   // 重新读入图片，读取缩放后的bitmap，注意这次要把inJustDecodeBounds 设为 false
   options.inJustDecodeBounds = false;
+  if(bitmap != null && !bitmap.isRecycled()) {
+    bitmap.recycle();
+  }
   bitmap = BitmapFactory.decodeFile(imagePath, options);
   // 利用ThumbnailUtils来创建缩略图，这里要指定要缩放哪个Bitmap对象
   bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
@@ -105,6 +97,20 @@ function getImgLattice(bitmap) {
   x=0
   y=0
   bitmap.getPixels(pixels,offset,stride,x,y,width,height)
+
+  // console.log("pixels=",pixels)
+  // exit()
+
+
+  // var pixels01 = pixels.map(function (value) {
+  //   if(value<-14000431){
+  //     return 1
+  //   }else{
+  //     return 0
+  //   }
+  // });
+
+
   return pixels
 
 
@@ -126,6 +132,8 @@ function getImgLattice(bitmap) {
   // return pixels
 }
 
+
+
 //如果要保存缩略图,调用save
 function saveBitmapToSDCard(bitmap, path) {
   file = new File(path);
@@ -143,19 +151,35 @@ function saveBitmapToSDCard(bitmap, path) {
   }
 }
 
-var img2Matrix = {};
 
-img2Matrix.getImgMatrix = (originalPicPath,ThumbnailPath) => {
+
+
+var multipleImg={}
+
+multipleImg.getMultipleImg=(multiple) =>{
+  PathBasic="/sdcard/QQ图中图/";
+  files.ensureDir(PathBasic);
+
+  w=Math.floor(1080/multiple)
+  h=Math.floor(1920/multiple)
+
+  imgPath='/sdcard/QQ图中图/原始截图.png'
+  images.captureScreen(imgPath)
   //先得到bitmap
-  bitmap=getImgThumbnail(originalPicPath)
+  bitmap=getImgThumbnail(imgPath,w,h);
   //保存缩略图
-  saveBitmapToSDCard(bitmap, ThumbnailPath)
-  //得到点阵
-  imgLattice=getImgLattice(bitmap)
-  return imgLattice
+  imgThumbnailPath='/sdcard/QQ图中图/'+multiple+'.png'
+  files.createWithDirs(imgThumbnailPath)
+  saveBitmapToSDCard(bitmap, imgThumbnailPath);
+  if(bitmap != null && !bitmap.isRecycled()) {
+    bitmap.recycle();
+  }
 }
 
-module.exports = img2Matrix;
+log("multipleImg=",multipleImg)
+
+module.exports = multipleImg;
+
 
 
 

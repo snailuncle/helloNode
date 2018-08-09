@@ -8,62 +8,10 @@ importClass(java.io.File)
 importClass(java.io.FileOutputStream)
 importClass(java.lang.Integer)
 
-// import Java.io.ByteArrayOutputStream;
-// import java.io.FileOutputStream;
-// import java.io.IOException;
-// import java.io.InputStream;
-// import android.app.Activity;
-// import android.content.Context;
-// import android.content.res.AssetManager;
-// import android.database.Cursor;
-// import android.database.sqlite.SQLiteDatabase;
-// import android.database.sqlite.SQLiteDatabase.CursorFactory;
-// import android.database.sqlite.SQLiteOpenHelper;
-// import android.graphics.Bitmap;
-// import android.graphics.BitmapFactory;
-// import android.graphics.drawable.BitmapDrawable;
-// import android.graphics.drawable.Drawable;
-// import android.os.Bundle;
-// import android.os.Environment;
-// import android.util.Log;
-// import android.view.View;
-// import android.widget.Button;
-// import android.widget.ImageView;
-
-// import android.app.Activity;
-// import android.content.Context;
-// import android.graphics.Bitmap;
-// import android.graphics.BitmapFactory;
-// import android.graphics.Canvas;
-// import android.graphics.Matrix;
-// import android.os.Bundle;
-// import android.util.Log;
-// import android.view.MotionEvent;
-// import android.view.View;
-// import android.view.Window;
-// import android.view.WindowManager;
-// import android.view.View.OnTouchListener;
-// import android.widget.ImageView;
-
-
-// var J = require("./J.js");
-// var arr = J.array("int", 2);
-// arr[0] = 1;
-// log(arr);
-
 
 var J = require("./J.js");
 
 
-
-
-imgPathBigPic="/sdcard/数独/";
-files.ensureDir(imgPathBigPic);
-imgPathSmallPic="/sdcard/数独/数字缩略图/";
-files.ensureDir(imgPathSmallPic);
-
-originalPicPath=imgPathBigPic+33+"clip.png"
-ThumbnailPath=imgPathSmallPic+33+"clip.png"
 //首先要做缩略图,减少计算
 function getImgThumbnail(imagePath, width, height) {
   width=width || 8
@@ -105,7 +53,21 @@ function getImgLattice(bitmap) {
   x=0
   y=0
   bitmap.getPixels(pixels,offset,stride,x,y,width,height)
-  return pixels
+
+  // console.log("pixels=",pixels)
+  // exit()
+
+
+  var pixels01 = pixels.map(function (value) {
+    if(value<-14000431){
+      return 1
+    }else{
+      return 0
+    }
+  });
+
+
+  return pixels01
 
 
 
@@ -126,6 +88,14 @@ function getImgLattice(bitmap) {
   // return pixels
 }
 
+
+function matrixDimensionalityReduction(arr){
+  for(let i=0;i<arr.length;i++){
+    
+  }
+
+}
+
 //如果要保存缩略图,调用save
 function saveBitmapToSDCard(bitmap, path) {
   file = new File(path);
@@ -143,9 +113,8 @@ function saveBitmapToSDCard(bitmap, path) {
   }
 }
 
-var img2Matrix = {};
 
-img2Matrix.getImgMatrix = (originalPicPath,ThumbnailPath) => {
+function getImgMatrix(originalPicPath,ThumbnailPath){
   //先得到bitmap
   bitmap=getImgThumbnail(originalPicPath)
   //保存缩略图
@@ -155,7 +124,70 @@ img2Matrix.getImgMatrix = (originalPicPath,ThumbnailPath) => {
   return imgLattice
 }
 
-module.exports = img2Matrix;
+
+PathBasic="/sdcard/数独/";
+files.ensureDir(PathBasic);
+// PathBasic="/sdcard/数独/1234缩略图";
+// files.ensureDir(PathBasic);
+
+//遍历原始样本数据,将缩略图放到缩略图文件夹
+
+// 一共四个数字1234,四个文件夹
+speciesNumber=4
+for(let i=0;i<speciesNumber;i++){
+
+  let originalImgFolder=files.join(PathBasic, "1234原始样本数据/"+(i+1))
+  var allFile = files.listDir(originalImgFolder);
+  // console.log(originalImgFolder)
+  // /sdcard/数独/1234原始样本数据/2
+
+  var allFilePath = allFile.map(function (imgName) {
+    return files.join(originalImgFolder,imgName)
+  });
+
+  // console.log(allFilePath)
+  // [ '/sdcard/数独/1234原始样本数据/4/02.png',
+  // '/sdcard/数独/1234原始样本数据/4/10.png',
+  // '/sdcard/数独/1234原始样本数据/4/23.png',
+  // '/sdcard/数独/1234原始样本数据/4/31.png',
+  // '/sdcard/数独/1234原始样本数据/4/021533624454366.png',
+  // '/sdcard/数独/1234原始样本数据/4/021533624470063.png',
+  // '/sdcard/数独/1234原始样本数据/4/131533624389957.png',
+  // '/sdcard/数独/1234原始样本数据/4/131533624424600.png',
+  // '/sdcard/数独/1234原始样本数据/4/131533624440614.png',
+  // '/sdcard/数独/1234原始样本数据/4/201533624389957.png',
+  // '/sdcard/数独/1234原始样本数据/4/201533624424600.png',
+  // '/sdcard/数独/1234原始样本数据/4/201533624440614.png',
+  // '/sdcard/数独/1234原始样本数据/4/301533624454366.png',
+  // '/sdcard/数独/1234原始样本数据/4/301533624470063.png' ]
+
+  //将上面的所有路径的图片变为缩略图
+
+  ThumbnailPath=files.join(PathBasic, "1234缩略图/"+(i+1))
+  LatticePath=files.join(PathBasic, "1234矩阵信息/"+(i+1))
+  // console.log(ThumbnailPath)
+  k=0
+  allFilePath.forEach(imgPath => {
+    //先得到bitmap
+    bitmap=getImgThumbnail(imgPath);
+    //保存缩略图
+    imgThumbnailPath=ThumbnailPath+'/'+k+'.png'
+    files.createWithDirs(imgThumbnailPath)
+    saveBitmapToSDCard(bitmap, imgThumbnailPath);
+    //得到点阵
+    imgLattice=getImgLattice(bitmap);
+    // console.log("imgLattice=",imgLattice)
+    numLatticePath=LatticePath+'/'+k+'.arr'
+    files.createWithDirs(numLatticePath)
+    files.writeBytes(numLatticePath, imgLattice)
+    k++;
+  });
 
 
 
+
+
+}
+
+// files.join(parent, child)
+// files.createWithDirs("/sdcard/新文件夹/新文件夹/新文件夹/1.txt");

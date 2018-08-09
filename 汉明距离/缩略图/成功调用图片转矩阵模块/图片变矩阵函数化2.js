@@ -8,21 +8,6 @@ importClass(java.io.File)
 importClass(java.io.FileOutputStream)
 importClass(java.lang.Integer)
 
-
-
-
-
-// var J = require("./J.js");
-// var arr = J.array("int", 2);
-// arr[0] = 1;
-// log(arr);
-
-
-var J = require("./J.js");
-
-
-
-
 imgPathBigPic="/sdcard/数独/";
 files.ensureDir(imgPathBigPic);
 imgPathSmallPic="/sdcard/数独/数字缩略图/";
@@ -63,34 +48,22 @@ function getImgLattice(bitmap) {
   width = bitmap.getWidth();
   height = bitmap.getHeight();
   console.log("width=",width,"  height=",height)
-  pixels = J.array("int", width * height);
-  // pixels = new Array(width * height);
-
-  offset=0
-  stride=width
-  x=0
-  y=0
-  bitmap.getPixels(pixels,offset,stride,x,y,width,height)
-  console.log("pixels=",pixels)
+  pixels = new Array(width * height);
+  k=0
+  for(let j=0;j<height;j++){
+    for(let i=0;i<width;i++){
+      let color=bitmap.getPixel(i,j)
+      console.log("color=",color)
+      // if(color>-1645833){
+      if(color==-1){
+        pixels[k]=0
+      }else{
+        pixels[k]=1
+      }
+      k++
+    }
+  }
   return pixels
-
-
-
-  // k=0
-  // for(let j=0;j<height;j++){
-  //   for(let i=0;i<width;i++){
-  //     let color=bitmap.getPixel(i,j)
-  //     console.log("color=",color)
-  //     // if(color>-1645833){
-  //     if(color==-1){
-  //       pixels[k]=0
-  //     }else{
-  //       pixels[k]=1
-  //     }
-  //     k++
-  //   }
-  // }
-  // return pixels
 }
 
 //如果要保存缩略图,调用save
