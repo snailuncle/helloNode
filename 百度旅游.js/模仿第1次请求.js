@@ -20,9 +20,27 @@ var res = http.post(requestUrl, {
     'Accept-Encoding': 'gzip',
     'User-Agent': 'okhttp/3.10.0'
   }
-});
-var html = res.body.string();
-log(html)
+},
+
+
+function(res, err){
+  if(err){
+      console.error(err);
+      return;
+  }
+  log("请求1code = " + res.statusCode);
+  // log("请求1html = " + res.body.string());
+  var html = res.body.string();
+  if(html.length()>1000){
+    log("请求1: success 信息长度=",html.length())
+  }else{
+    log("请求1: failed 信息长度=",html.length())
+
+  }
+}
+
+
+);
 log("请求1结束")
 }
 
@@ -32,3 +50,15 @@ var circle = {};
 circle.req = firstRequest
 
 module.exports = circle;
+
+
+
+// console.show();
+// http.get("www.baidu.com", {}, function(res, err){
+//     if(err){
+//         console.error(err);
+//         return;
+//     }
+//     log("code = " + res.statusCode);
+//     log("html = " + res.body.string());
+// });

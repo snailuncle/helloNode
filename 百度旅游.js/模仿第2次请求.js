@@ -19,9 +19,29 @@ var res = http.post(requestUrl, {
     'Accept-Encoding': 'gzip',
     'User-Agent': 'okhttp/3.10.0'
   }
-});
-var html = res.body.string();
-log(html)
+},
+
+function(res, err){
+  if(err){
+      console.error(err);
+      return;
+  }
+  log("请求2code = " + res.statusCode);
+  // log("请求2html = " + res.body.string());
+  var html = res.body.string();
+  // success
+  if(html.indexOf("success") != -1 ){
+    log("请求2: success 信息长度=",html.length())
+  }else{
+    log("请求2: failed 信息长度=",html.length())
+
+  }
+}
+
+
+
+
+);
 log("请求2结束")
 }
 
