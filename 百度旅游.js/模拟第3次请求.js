@@ -1,6 +1,6 @@
 auto()
 function thirdRequest(pn,rn){
-log("请求3开始")
+// log("请求3开始")
 requestUrl = "http://ilvyou.baidu.com/travel/note/videolistv1"
 APP_TIME = Math.floor((new Date().getTime()))
 REQUEST_ID = new Date().getTime()*1000
@@ -20,29 +20,29 @@ var res = http.post(requestUrl, {
     'Accept-Encoding': 'gzip',
     'User-Agent': 'okhttp/3.10.0'
   }
+},
+
+function(res, err){
+  if(err){
+      console.error(err);
+      return;
+  }
+  // log("请求3code = " + res.statusCode);
+  // log("请求3html = " + res.body.string());
+  var html = res.body.string();
+  if(html.length()>1000){
+    // log("请求3: success 信息长度=",html.length())
+  }else{
+    // log("请求3: failed 信息长度=",html.length())
+
+  }
 }
-
-// function(res, err){
-//   if(err){
-//       console.error(err);
-//       return;
-//   }
-//   log("请求3code = " + res.statusCode);
-//   // log("请求3html = " + res.body.string());
-//   var html = res.body.string();
-//   if(html.length()>1000){
-//     log("请求3: success 信息长度=",html.length())
-//   }else{
-//     log("请求3: failed 信息长度=",html.length())
-
-//   }
-// }
 
 
 
 
 );
-log("请求3结束")
+// log("请求3结束")
 }
 
 var circle = {};

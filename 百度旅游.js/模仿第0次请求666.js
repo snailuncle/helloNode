@@ -4413,7 +4413,10 @@ const req3 = require('模拟第3次请求.js');
 
 
 
-console.show()
+// console.show()
+
+第几个了=0
+
 视频数量 = 视频参数列表.length
 // 视频数量=1
 for (let k = 0; k < 200; k++) {
@@ -4423,17 +4426,51 @@ for (let k = 0; k < 200; k++) {
 
     for (let j = 0; j < 视频ID数组.length; j++) {
       var pn = 视频参数列表[i].pn
+
+      // 视频ID = "x5feb66620200"
+
       var 视频ID = 视频ID数组[j].视频id
       log(视频ID数组[j])
-      while (1) {
+      log("第几个了=",++第几个了)
 
-        var shua = 刷视频浏览量(视频ID, pn)
-        if (shua) {
-
-        } else {
-          break;
-        }
+      var pv=get浏览量pv(视频ID)
+      log("pv=",pv)
+      var 刷一次的量=3
+      var n=null
+      if(pv>1 && pv<2000){
+        var n=Math.ceil((2000-pv)/刷一次的量)
+      }else{
+        n=0
       }
+      //数据库不能及时更新,因此先刷
+      for(let i=0;i<n;i++){
+
+        刷视频浏览量(视频ID, pn,刷一次的量)
+      }
+      // exit()
+
+
+
+
+
+
+
+
+
+      // while (1) {
+
+      //   var shua = 刷视频浏览量(视频ID, pn)
+      //   if (shua) {
+
+      //   } else {
+      //     break;
+      //   }
+      // }
+
+
+
+
+
     }
   }
 }
@@ -4443,28 +4480,38 @@ for (let k = 0; k < 200; k++) {
 
 
 
-function 刷视频浏览量(视频ID, pn) {
-  // 视频ID = "x7eeb32370200"
+function 刷视频浏览量(视频ID, pn,刷一次的量) {
+
   // pn=0
-  rn = 10
-  for (let i = 0; i < 10; i++) {
+  var rn = 6
+  try {
+    // log("开始刷浏览量")
+    for (let i = 0; i < 刷一次的量; i++) {
+      // log("视频ID=",视频ID,"pn=",pn,"rn=",rn)
+    // req1.req(视频ID)
+    req2.req(视频ID)
+    // req3.req(pn, rn)
+    sleep(20)
+    }
+    // log("结束刷浏览量")
+  } catch (e) {
+    log(e+"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+  }
+
+
+}
+function get浏览量pv(视频ID) {
+  // 视频ID = "x7eeb32370200"
+
     try {
-      var pv = req1.req(视频ID)
-      log("pv=", pv)
-      if (pv < 2000) {
-        req2.req(视频ID)
-        req3.req(pn, rn)
-        return true
-      } else {
-        return false
-      }
+      var pv = req1.req_pv(视频ID)
+      return pv
     } catch (e) {
-      log(e)
+      log(e+"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+      return 0
     }
 
-  }
-  sleep(3000)
-  // exit()
+
 }
 
 
