@@ -20,23 +20,23 @@ var res = http.post(requestUrl, {
     'Accept-Encoding': 'gzip',
     'User-Agent': 'okhttp/3.10.0'
   }
-},
-
-function(res, err){
-  if(err){
-      console.error(err);
-      return;
-  }
-  log("请求3code = " + res.statusCode);
-  // log("请求3html = " + res.body.string());
-  var html = res.body.string();
-  if(html.length()>1000){
-    log("请求3: success 信息长度=",html.length())
-  }else{
-    log("请求3: failed 信息长度=",html.length())
-
-  }
 }
+
+// function(res, err){
+//   if(err){
+//       console.error(err);
+//       return;
+//   }
+//   log("请求3code = " + res.statusCode);
+//   // log("请求3html = " + res.body.string());
+//   var html = res.body.string();
+//   if(html.length()>1000){
+//     log("请求3: success 信息长度=",html.length())
+//   }else{
+//     log("请求3: failed 信息长度=",html.length())
+
+//   }
+// }
 
 
 
