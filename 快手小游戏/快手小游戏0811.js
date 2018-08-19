@@ -47,9 +47,9 @@ auto();
 //==================脚本主控制区======================================
 // gameName = "连连看"
 //  gameName = "拯救萌宠"
-// gameName = "消砖块"
+gameName = "消砖块"
 // gameName = "圈圈消除"
- gameName = "翻翻乐"
+//  gameName = "翻翻乐"
 
 
 // gameName = "大圣来了"
@@ -234,6 +234,7 @@ function gameResult(){
     sleep(2000)
     for (let i = 0; i < 3; i++) {
         if(whichPage()=="聊天"){
+            messageSend()
             log("从pk页返回到了聊天页")
             //点击左上角箭头,返回主页
             back()
@@ -3524,174 +3525,334 @@ function isColorHereCircle(pointCoordinate,radius,color){
 
 
 
+
+
+
+
+
+
+
+
+
 function fanFanLe(){
-
-//作者QQ203118908
-//更新日期0722
-
-if(!requestScreenCapture()){
-  toast("请求截图失败");
-  exit();
-}
-pressTime=1
-pressIntervalTime = 10;
-pukeColor="#915bed"
-backgroundColor="#301754"
-columnsNumber=4
-rowsNumber=6
-imgPath="/sdcard/快手小游戏截图/翻翻乐/";
-imgPathWareHouse="/sdcard/快手小游戏截图/翻翻乐/仓库";
-files.removeDir(imgPath)
-files.ensureDir(imgPath);
-files.ensureDir(imgPathWareHouse);
-imgFistCenterCoordinate = [208,505];
-imgLastCenterCoordinate = [855,1575];
-SpacingLeftAndRight = Math.round((imgLastCenterCoordinate[0] - imgFistCenterCoordinate[0]) / (columnsNumber - 1));
-SpacingUpAndDown = Math.round((imgLastCenterCoordinate[1] - imgFistCenterCoordinate[1]) / (rowsNumber - 1));
-翻拍之后等待的时间=1000
-grids = [];
-for (var x=0; x<6; x++) {
-  grids.push([]);
-  for (var y=0; y<4; y++) {
-    let xx=imgFistCenterCoordinate[0]+SpacingLeftAndRight*y
-    let yy=imgFistCenterCoordinate[1]+SpacingUpAndDown*x
-    grids[x].push( {serialNumberX:x,serialNumberY:y,coordinateX:xx, coordinateY:yy,card:"待翻牌",click:function(){
-      press(xx,yy,1)
-    },colorCenter:function(){
-      let img=captureScreen()
-      let color=images.pixel(img, xx, yy)
-      return color
-    }} );
+  if (!requestScreenCapture()) {
+    toast("请求截图失败");
+    exit();
   }
-}
-for(let kk=0;kk<1;kk++){
-  knownGrids=[]
-  cardCanTurnResult=cardCanTurn()
-  lastClick=null
-  for(let i=0;i<cardCanTurnResult.length;i++){
-    let x=cardCanTurnResult[i].serialNumberX
-    let y=cardCanTurnResult[i].serialNumberY
-    cardCanTurnResult[i].click()
-    sleep(翻拍之后等待的时间)
-    img=captureScreen()
-    let coordinateX=grids[x][y].coordinateX
-    let coordinateY=grids[x][y].coordinateY
-    colorAfterClick=images.pixel(img, coordinateX, coordinateY)
-    if(colors.isSimilar(colorAfterClick, backgroundColor)){
-      if(lastClick){
-        grids[lastClick.serialNumberX][lastClick.serialNumberY].card="disappear"
-      }
-        grids[x][y].card="disappear"
-    }else{
-      let xy={x:coordinateX,y:coordinateY}
-      let imgCenterSmall=captureCenter(img,xy)
-      grids[x][y].card=imgCenterSmall
-      name=x+"-"+y
-      // images.save(imgCenterSmall, imgPath+name+".png");
-      isImgCenterInKnownGridsResult=isImgCenterInKnownGrids(imgCenterSmall)
-      if(isImgCenterInKnownGridsResult){
-        for(let j=0;j<2;j++){
-          grids[x][y].click()
-          sleep(pressIntervalTime)
-          isImgCenterInKnownGridsResult.click()
-          sleep(pressIntervalTime)
-          var page=whichPage()
-          if(page=="某游戏"){
+  sleep(1000)
+  pressTime = 1
+  pukeColor = "#915bed"
+  backgroundColor = "#301754"
+  columnsNumber = 4
+  rowsNumber = 6
+  imgPath = "/sdcard/快手小游戏截图";
+  imgPathWareHouse = "/sdcard/快手小游戏截图/翻翻乐/仓库";
+  imgPathBackground = "/sdcard/快手小游戏截图/翻翻乐/背景";
+  imgPathCenterImg = "/sdcard/快手小游戏截图/翻翻乐/中心图";
+  files.removeDir(imgPathWareHouse)
+  files.removeDir(imgPathBackground)
+  files.removeDir(imgPathCenterImg)
 
-          }else{
-            return ;
+  files.ensureDir(imgPathWareHouse);
+  files.ensureDir(imgPathBackground);
+  files.ensureDir(imgPathCenterImg);
+  imgFistCenterCoordinate = [208, 505];
+  imgLastCenterCoordinate = [855, 1593];
+  SpacingLeftAndRight = Math.round((imgLastCenterCoordinate[0] - imgFistCenterCoordinate[0]) / (columnsNumber - 1));
+  SpacingUpAndDown = Math.round((imgLastCenterCoordinate[1] - imgFistCenterCoordinate[1]) / (rowsNumber - 1));
+
+  SpacingLeftAndRight=216
+  SpacingUpAndDown=216
+
+
+  sleep(200)
+  翻拍之后等待的时间 = 200
+
+  grids = [];
+  img = captureScreen()
+
+  for (var x = 0; x < 6; x++) {
+    grids.push([]);
+    for (var y = 0; y < 4; y++) {
+      let xx = imgFistCenterCoordinate[0] + SpacingLeftAndRight * y
+      let yy = imgFistCenterCoordinate[1] + SpacingUpAndDown * x
+      grids[x].push({
+        serialNumberX: x,
+        serialNumberY: y,
+        coordinateX: xx,
+        coordinateY: yy,
+        card: "未知",
+        exist:true,
+        click: function (原因) {
+          // log('当前点击的是',this.serialNumberX,this.serialNumberY,"点击原因是",原因)
+          // sleep(1000)
+          press(xx, yy, 1)
+          sleep(50)
+        },
+
+
+        imgCenter中心图: function () {
+          let img = captureScreen();
+          let smallImg = images.clip(img, xx-30, yy-30, 60, 60)
+          // let path16=imgPathCenterImg + '/翻翻乐中心图'+this.serialNumberX+this.serialNumberY+'.png'
+          // files.createWithDirs(path16)
+          // // log("中心图保存开始")
+          // images.save(smallImg, path16)
+          // // log("中心图保存结束")
+          return smallImg
+        },
+
+      });
+    }
+  }
+
+
+  var knowImgs=getKnownImgs()
+
+
+
+
+
+
+  for(let kk=0;kk<1;kk++){
+
+
+
+
+
+
+
+
+
+
+
+
+    for (var x = 0; x < 6; x++) {
+      for (var y = 0; y < 4; y++) {
+        var gridNow=getGridInfo(x,y)
+
+        if(gridNow && gridNow.hasOwnProperty("info") &&
+           gridNow.info.hasOwnProperty("name")
+
+      ){
+          log('name=',grids[x][y].info.name,grids[x][y].serialNumberX,grids[x][y].serialNumberY)
+          //没有翻牌就点
+          //是蛋糕图片就去仓库中找蛋糕图片
+          //其他不予理会
+          if(gridNow.info.name.indexOf('未翻牌') != -1){
+
+            gridNow.click("未翻牌")
+
+            sleep(300)
+            log("这个格子刚才未翻牌,现在应该翻过来",x,y)
+          }
+          var gridNow2=getGridInfo(x,y)
+          log("翻牌之后的是:",gridNow2)
+          // log('下面开始遍历格子')
+          for (var xx = 0; xx < 6; xx++) {
+            for (var yy = 0; yy < 4; yy++) {
+              if(x==xx && y==yy){
+                continue
+              }
+              // log('开始遍历的格子序号= ',xx,yy)
+              //遍历格子是位了点击和当前图片一样的格子
+              //如果这个格子存储了信息  拿出来和当前格子的信息比较
+              if(grids[xx][yy].hasOwnProperty("info") && grids[xx][yy].info.hasOwnProperty("name") &&
+              gridNow2.hasOwnProperty("info") && gridNow2.info.hasOwnProperty("name")
+
+
+            ){
+                if(grids[xx][yy].info.name==gridNow2.info.name){
+                log("正在对比的格子是=",gridNow2.info.name)
+
+                  grids[x][y].click("相同图片")
+                  grids[xx][yy].click("相同图片")
+                  // grids[x][y].click("相同图片")
+                  // grids[xx][yy].click("相同图片")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                }
+
+              }
+
+            }
           }
 
 
 
+
+
+
+
+
+
+
+
+
+        }else{
+          log('获取格子信息失败',x,y)
         }
-        sleep(翻拍之后等待的时间)
-      }else{
-        knownGrids.push(grids[x][y])
-        lastClick=grids[cardCanTurnResult[i]]
-        imgCenterSmallWareHouse=grids[x][y].card
-        name=x+"-"+y
-        // images.save(imgCenterSmallWareHouse, imgPathWareHouse+name+".png");
       }
     }
+
+    // logGrid()
+
+    for (var x = 0; x < 6; x++) {
+      for (var y = 0; y < 4; y++) {
+        if(grids[x][y].hasOwnProperty("info") && grids[x][y].info.hasOwnProperty("name")){
+
+          grids[x][y].info.name=""
+        }
+      }
+    }
+
+
+
+
+
+
+
+
   }
-}
-function logKnownGrids(){
-  let s=""
-  for(let i=0;i<knownGrids.length;i++){
-    s=s+knownGrids[i].serialNumberX+knownGrids[i].serialNumberY+","
+
+
+  function  getGridInfo(x,y){
+    //未翻牌
+    var 格子中心图=grids[x][y].imgCenter中心图()
+    for(let i=0;i<knowImgs.length;i++){
+      var p = findImage(knowImgs[i].img, 格子中心图,{
+        threshold:0.9
+      });
+    //   var p = findImage(knowImgs[i].img, 格子中心图,{
+    //     region: [60, 60,60,60],
+    //     threshold: 0.8
+    // });
+      if(p){
+        grids[x][y].info=knowImgs[i] //name img
+        log("和仓库中的一样",knowImgs[i])
+        return  grids[x][y]
+      }
+    }
+    return false
   }
-  return s
-}
-function isImgCenterInKnownGrids(imgCenter){
-  for (var i=0; i<knownGrids.length; i++) {
-    var p = findImage(knownGrids[i].card, imgCenter,{
-      threshold: 0.8
-    });
-    if(p){
-      knownGrids[i].index=i
-      return knownGrids[i]
+
+
+  function getKnownImgs(){
+    var imgPathWareHouse="/sdcard/快手小游戏截图/翻翻乐/会出现的图"
+    var 仓库=[]
+    仓库中有图片吗=files.isEmptyDir(imgPathWareHouse)
+    if(!仓库中有图片吗){
+      var imgFiles = files.listDir(imgPathWareHouse);
+      for(let i=0;i<imgFiles.length;i++){
+        仓库.push(
+
+          {
+            "name":imgFiles[i],
+            "img":images.read(  files.join(imgPathWareHouse, imgFiles[i])   )
+          }
+
+        )
+      }
+      return 仓库
     }else{
+      toastLog("仓库中没有图片,不放图片不能用")
+      exit()
     }
+
+
+
+
   }
-  return false
+
 }
-function captureCenter(img,xy) {
-  let k=50
-  var clip = images.clip(img, xy.x-30, xy.y-30, k+k, k+k);
-  return clip
-}
-function cardCanTurn(){
-  let img=captureScreen()
-  cardCanTurnList = [];
-  for (var x=0; x<6; x++) {
-    for (var y=0; y<4; y++) {
-      let xx=imgFistCenterCoordinate[0]+SpacingLeftAndRight*y
-      let yy=imgFistCenterCoordinate[1]+SpacingUpAndDown*x
-      let colorAfterClick=images.pixel(img, xx, yy)
-      log("xx,yy",xx,yy)
-
-      // exit()
-      // backgroundColor2="#640aaa"
-      // backgroundColor3="#5b0e9a"
-      // backgroundColor4="#3e156a"
-      // backgroundColor5="#2e1850"
-
-
-
-      // 208,  505, 0x915bed
-      // 213,  443, 0xa18ef7
-      // 210,  564, 0x9254d5
-
-      // 208,  505, 0x915bed
-      // 140,  438, 0xa292f7
-      // 284,  569, 0x9254d1
 
 
 
 
-      images.detectsColor(img, "#a18ef7", xx, yy-62)
-      images.detectsColor(img, "#9254d5", xx, yy+59)
-
-      相似度=6
-      if(colors.isSimilar(colorAfterClick, backgroundColor) &&images.detectsColor(img, "#a18ef7", xx, yy-62,相似度) &&
-      images.detectsColor(img, "#9254d5", xx, yy+59,相似度) &&
-      images.detectsColor(img, "#a292f7", xx-68, yy-67,相似度) &&
-      images.detectsColor(img, "#9254d1", xx+76, yy+64,相似度)
 
 
-    ){
-      }else{
-        cardCanTurnList.push( {serialNumberX:x,serialNumberY:y,coordinateX:xx,coordinateY:yy,toString:function(){ return
-          "序号("+x+y+") 坐标("+xx+","+yy+")"
-        },click:function(){
-          press(xx,yy,1)
-        }});
-      }
-    }
+function messageSend() {
+  var adv=Math.floor(Math.random()*10)+1;
+  if(adv>2){return;}
+  var str1=decodeURI(decodeURI("%25E5%25BF%25AB%25E6%2589%258B%25E5%25B0%258F%25E6%25B8%25B8%25E6%2588%258FQ%25E7%25BE%25A4470614178%25EF%25BC%258C%25E8%25BF%259B%25E7%25BE%25A4%25E5%25BD%2593%25E6%259C%2580%25E5%25BC%25BA%25E7%258E%258B%25E8%2580%2585"))
+  sleep(3)
+  let s = str1 + " " + randomContent()
+
+  setW=className("android.widget.EditText").text("戳这里打字").findOnce(300)
+  if(setW){
+    setW.setText(s);
+    text("发送").findOne(300).click();
   }
-  return cardCanTurnList
+  //////log("发送的随机字符串是", s)
+  log("发送完毕",s)
+  sleep(300)
 }
 
 
-    }
+function randomContent() {
+  var tmp = randomText();
+  var timestamp = CurentTime()
+  return tmp + timestamp;
+}
+
+
+function randomText() {
+  var _len = 10;
+  var i = 0;
+  var _str = "";
+  var _base = 20000;
+  var _range = 1000;
+  while (i < _len) {
+      i++;
+      var _lower = parseInt(Math.random() * _range);
+      _str += String.fromCharCode(_base + _lower);
+  }
+  return _str;
+}
+
+
+function CurentTime() {
+  var now = new Date();
+
+  var year = now.getFullYear(); //年
+  var month = now.getMonth() + 1; //月
+  var day = now.getDate(); //日
+
+  var hh = now.getHours(); //时
+  var mm = now.getMinutes(); //分
+
+  var clock = year + "-";
+
+  if (month < 10)
+      clock += "0";
+
+  clock += month + "-";
+
+  if (day < 10)
+      clock += "0";
+
+  clock += day + " ";
+
+  if (hh < 10)
+      clock += "0";
+
+  clock += hh + ":";
+  if (mm < 10) clock += '0';
+  clock += mm;
+  return (clock);
+}
+
+
