@@ -24,7 +24,7 @@ imgLastCenterCoordinate = [855, 1575];
 SpacingLeftAndRight = Math.round((imgLastCenterCoordinate[0] - imgFistCenterCoordinate[0]) / (columnsNumber - 1));
 SpacingUpAndDown = Math.round((imgLastCenterCoordinate[1] - imgFistCenterCoordinate[1]) / (rowsNumber - 1));
 sleep(200)
-翻拍之后等待的时间 = 500
+翻拍之后等待的时间 = 200
 grids = [];
 img = captureScreen()
 
@@ -274,15 +274,40 @@ else{
 function isImg1Img2Similar(img1,img2){
   //可能图片太小,比较图片结果不对,看着一样,但函数判断不一样,
   // 改为提取图片给上5个点,如果5个点相似就判断两张图片相似
+  //5个点需要加上位置属性
+
 
   point5FromImg1=point5FromImg(img1)
   let count=0
   for(let i=0;i<point5FromImg1.length;i++){
-    let color1=point5FromImg1[i]
+
+
+    let color1=point5FromImg1[i].color
+    let x=point5FromImg1[i].x
+    let y=point5FromImg1[i].y
+
+
     color1=colors.toString(color1)
     // log("img2=",img2)
     // log("color1=",color1)
-    let result=findColor(img2, color1);
+
+//在该图片中找色，指定找色区域为在位置(400, 500)的宽为300长为200的区域，指定找色临界值为4
+// var point = findColor(img, "#00ff00", {
+//   region: [400, 500, 300, 200],
+//   threshold: 4
+// });
+
+    let 范围=4
+
+
+    let result=findColor(img2, color1,{
+      region: [x-范围, y-范围, 2*范围, 2*范围],
+      threshold: 4
+    }
+
+
+
+    );
     if(result){count++;}
 
 
@@ -339,8 +364,34 @@ function point5FromImg(img){
   let color3=images.pixel(img, 25, 5)
   let color4=images.pixel(img, 5, 15)
   let color5=images.pixel(img, 5, 25)
-
-  return [color1,color2,color3,color4,color5]
+  let result=[
+    {
+      "color":color1,
+      "x":5,
+      "y":5
+    },
+    {
+      "color":color2,
+      "x":15,
+      "y":5
+    },
+    {
+      "color":color3,
+      "x":25,
+      "y":5
+    },
+    {
+      "color":color4,
+      "x":5,
+      "y":15
+    },
+    {
+      "color":color5,
+      "x":5,
+      "y":25
+    }
+  ]
+  return result
 }
 
 
