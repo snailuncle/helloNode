@@ -1,7 +1,8 @@
-
-  numh='4706'
-  numf='14178'
-  str1="快手小游戏Q群"+numh+numf+"，进群当最强王者"
-  color=encodeURI(str1)
-  color=encodeURI(color)
-log("color=",color)
+w1 = text("回到首页").findOnce();
+w2 = text("对方已离开房间").findOnce();
+w3 = id("tv_win_compare").findOnce();
+if(w1 != null && w2!=null && w3!=null){
+    log( "pk结果")
+}else{
+  log("啥也没有")
+}
