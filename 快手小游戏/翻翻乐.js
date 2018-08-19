@@ -56,7 +56,7 @@ SpacingLeftAndRight = Math.round((imgLastCenterCoordinate[0] - imgFistCenterCoor
 SpacingUpAndDown = Math.round((imgLastCenterCoordinate[1] - imgFistCenterCoordinate[1]) / (rowsNumber - 1));
 
 SpacingLeftAndRight=216
-SpacingUpAndDown=217
+SpacingUpAndDown=216
 
 
 sleep(200)
