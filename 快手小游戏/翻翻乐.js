@@ -2,6 +2,37 @@ if (!requestScreenCapture()) {
   toast("请求截图失败");
   exit();
 }
+// 10,53
+
+// path1="/storage/emulated/0/快手小游戏截图/翻翻乐/中心图/翻翻乐中心图10.png"
+// path2="/storage/emulated/0/快手小游戏截图/翻翻乐/仓库/翻翻乐仓库53.png"
+
+// img1=images.read(path1)
+// img2=images.read(path2)
+
+// r=isImg1Img2Similar(img1,img2)
+//   log(r)
+//   exit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 pressTime = 1
 pressIntervalTime = 10;
 pukeColor = "#915bed"
@@ -20,11 +51,17 @@ files.ensureDir(imgPathWareHouse);
 files.ensureDir(imgPathBackground);
 files.ensureDir(imgPathCenterImg);
 imgFistCenterCoordinate = [208, 505];
-imgLastCenterCoordinate = [855, 1575];
+imgLastCenterCoordinate = [855, 1593];
 SpacingLeftAndRight = Math.round((imgLastCenterCoordinate[0] - imgFistCenterCoordinate[0]) / (columnsNumber - 1));
 SpacingUpAndDown = Math.round((imgLastCenterCoordinate[1] - imgFistCenterCoordinate[1]) / (rowsNumber - 1));
+
+SpacingLeftAndRight=216
+SpacingUpAndDown=217
+
+
 sleep(200)
-翻拍之后等待的时间 = 200
+翻拍之后等待的时间 = 500
+
 grids = [];
 img = captureScreen()
 
@@ -85,19 +122,22 @@ var 此时的背景=游戏readyGo时生成背景()
 //一样的话就点击,并且在仓库中消除该图片
 //不一样的话就再点下一张
 
-for(let kk=0;kk<3;kk++){
+for(let kk=0;kk<1;kk++){
 
   for (var x = 0; x < 6; x++) {
     for (var y = 0; y < 4; y++) {
-      if(grids[x][y].exist){}else{continue}
-      grids[x][y].click()
+      if(grids[x][y].exist){grids[x][y].click()}else{continue}
       sleep(翻拍之后等待的时间)
       var img中心图=grids[x][y].imgCenter中心图()
-
+      var 当前中心图={
+        'img':img中心图,
+        'x':x,
+        'y':y
+      }
       //点击一张,就和仓库对比一次,相同的话,就点击两张图两次.
       var 仓库图片路径列表=返回仓库图片文件路径列表()
       if(仓库图片路径列表){
-        var 图片序号=当前图片和仓库中的图片对比(img中心图,仓库图片路径列表)
+        var 图片序号=当前图片和仓库中的图片对比(当前中心图,仓库图片路径列表)
         if(图片序号){
           log("图片序号=",图片序号)
           // exit()
@@ -110,7 +150,6 @@ for(let kk=0;kk<3;kk++){
           grids[图片序号[0]][图片序号[1]].exist=false
           //从仓库中清除这两张图片
           files.remove(图片序号[2])
-
 
         }else{
           grids[x][y].imgCenter仓库(img中心图)
@@ -128,8 +167,32 @@ for(let kk=0;kk<3;kk++){
 
     }
   }
-}
 
+
+
+
+
+
+
+  let 表格=""
+  for (var x = 0; x < 6; x++) {
+    for (var y = 0; y < 4; y++) {
+
+      let r=grids[x][y].exist
+      if(r){
+        表格+=1+","
+      }else{
+        表格+=0+","
+
+      }
+
+    }
+    表格+="\n"
+
+  }
+  log("表格=\n",表格)
+
+}
 
 
 
@@ -152,9 +215,21 @@ function 当前图片和仓库中的图片对比(img,仓库图片路径列表){
   log(仓库图片路径列表)
   let k=0
   for(let i=0;i<仓库图片路径列表.length;i++){
-    let img1=img
+    let img1=img.img
     let img2=images.read(仓库图片路径列表[i])
-    let 一样不=isImg1Img2Similar(img1,img2)
+    let 一样不=false
+    if(提取最后两位数字(仓库图片路径列表[i])[0] != img.x && 提取最后两位数字(仓库图片路径列表[i])[1] != img.y ){
+
+      一样不=isImg1Img2Similar(img1,img2)
+
+
+
+
+    }
+
+
+
+
     if(一样不){
 
 
@@ -276,6 +351,8 @@ function isImg1Img2Similar(img1,img2){
   // 改为提取图片给上5个点,如果5个点相似就判断两张图片相似
   //5个点需要加上位置属性
 
+// 10  53
+
 
   point5FromImg1=point5FromImg(img1)
   let count=0
@@ -297,11 +374,30 @@ function isImg1Img2Similar(img1,img2){
 //   threshold: 4
 // });
 
-    let 范围=4
+    let 范围=10
 
+    let 图片宽度=img1.getWidth()
+    let 图片高度=img1.getHeight()
+
+    let xStart=x-范围
+    if(xStart<0){
+      xStart=1
+    }
+    let yStart=y-范围
+    if(yStart<0){
+      yStart=1
+    }
+    let xEnd=x+范围
+    if(xEnd>图片宽度){
+      xEnd=图片宽度
+    }
+    let yEnd=y+范围
+    if(yEnd>图片宽度){
+      yEnd=图片宽度
+    }
 
     let result=findColor(img2, color1,{
-      region: [x-范围, y-范围, 2*范围, 2*范围],
+      region: [xStart, yStart, xEnd-xStart, yEnd-yStart],
       threshold: 4
     }
 
