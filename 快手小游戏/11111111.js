@@ -1,8 +1,8 @@
 // 00   10  是否相似
 
 
-path1="/storage/emulated/0/快手小游戏截图/翻翻乐/中心图/翻翻乐中心图40.png"
-path2="/storage/emulated/0/快手小游戏截图/翻翻乐/仓库/翻翻乐仓库44.png"
+path1="/storage/emulated/0/快手小游戏截图/翻翻乐/中心图/翻翻乐中心图42.png"
+path2="/storage/emulated/0/快手小游戏截图/翻翻乐/仓库/翻翻乐仓库43.png"
 
 
 
@@ -11,7 +11,8 @@ img2=images.read(path2)
 
 
 
-
+log("img1=",img1)
+log("img2=",img2)
 r=isImg1Img2Similar(img1,img2)
 log("r=",r)
 
@@ -42,15 +43,13 @@ function isImg1Img2Similar(img1,img2){
   // 改为提取图片给上5个点,如果5个点相似就判断两张图片相似
 
   point5FromImg1=point5FromImg(img1)
-  point5FromImg2=point555FromImg(img2)
   let count=0
   for(let i=0;i<point5FromImg1.length;i++){
     let color1=point5FromImg1[i]
     color1=colors.toString(color1)
-    let color2=point5FromImg2[i]
+    // log("img2=",img2)
     // log("color1=",color1)
-    // log("color2=\n",color2)
-    let result=isSimilarIn(color1, color2)
+    let result=findColor(img2, color1);
     if(result){count++;}
 
 
@@ -61,32 +60,6 @@ function isImg1Img2Similar(img1,img2){
   return false
   // var result=images.findImageInRegion(img1, img2, 1, 1, 29, 29)
 }
-
-
-function isSimilarIn(color1, color2){
-  //color1是一个颜色
-  //color1是一个颜色数组
-  let flag=false
-  for(let i=0;i<color2.length;i++){
-
-    let result=colors.isSimilar(color1, color2[i])
-    if(result){
-      flag=true
-    }
-
-  }
-
-
-
-
-  if(flag){
-    return true
-  }else{
-    return false
-  }
-}
-
-
 
 
 
@@ -110,35 +83,4 @@ function point5FromImg(img){
   let color5=images.pixel(img, 5, 25)
 
   return [color1,color2,color3,color4,color5]
-}
-function point555FromImg(img){
-  // 5  15  25
-
-  let color1=采集周围的点(img, 5, 5)
-  let color2=采集周围的点(img, 15, 5)
-  let color3=采集周围的点(img, 25, 5)
-  let color4=采集周围的点(img, 5, 15)
-  let color5=采集周围的点(img, 5, 25)
-  // log("point555FromImg=",[color1,color2,color3,color4,color5])
-  return [color1,color2,color3,color4,color5]
-}
-
-function 采集周围的点(img,x,y){
-  var num=4
-  var colorsArr=[]
-  x=x-num
-  y=y-num
-  for(let i=0;i<num*2;i++){
-    for(let j=0;j<num*2;j++){
-      let color=images.pixel(img, x+j, y+i)
-      // log("数字color=",color)
-
-      color=colors.toString(color)
-      // log("RGBcolor=",color)
-      colorsArr.push(color)
-    }
-  }
-  // log(colorsArr)
-  // exit()
-  return colorsArr
 }

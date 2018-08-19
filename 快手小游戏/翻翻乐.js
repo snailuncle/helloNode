@@ -24,7 +24,7 @@ imgLastCenterCoordinate = [855, 1575];
 SpacingLeftAndRight = Math.round((imgLastCenterCoordinate[0] - imgFistCenterCoordinate[0]) / (columnsNumber - 1));
 SpacingUpAndDown = Math.round((imgLastCenterCoordinate[1] - imgFistCenterCoordinate[1]) / (rowsNumber - 1));
 sleep(200)
-翻拍之后等待的时间 = 100
+翻拍之后等待的时间 = 500
 grids = [];
 img = captureScreen()
 
@@ -85,43 +85,48 @@ var 此时的背景=游戏readyGo时生成背景()
 //一样的话就点击,并且在仓库中消除该图片
 //不一样的话就再点下一张
 
+for(let kk=0;kk<3;kk++){
 
-for (var x = 0; x < 6; x++) {
-  for (var y = 0; y < 4; y++) {
-    grids[x][y].click()
-    sleep(100)
-    var img中心图=grids[x][y].imgCenter中心图()
+  for (var x = 0; x < 6; x++) {
+    for (var y = 0; y < 4; y++) {
+      if(grids[x][y].exist){}else{continue}
+      grids[x][y].click()
+      sleep(翻拍之后等待的时间)
+      var img中心图=grids[x][y].imgCenter中心图()
 
-    //点击一张,就和仓库对比一次,相同的话,就点击两张图两次.
-    var 仓库图片路径列表=返回仓库图片文件路径列表()
-    if(仓库图片路径列表){
-      var 图片序号=当前图片和仓库中的图片对比(img中心图,仓库图片路径列表)
-      if(图片序号){
-        log("图片序号=",图片序号)
-        // exit()
-        grids[x][y].click()
-        grids[图片序号[0]][图片序号[1]].click()
-        grids[x][y].click()
-        grids[图片序号[0]][图片序号[1]].click()
+      //点击一张,就和仓库对比一次,相同的话,就点击两张图两次.
+      var 仓库图片路径列表=返回仓库图片文件路径列表()
+      if(仓库图片路径列表){
+        var 图片序号=当前图片和仓库中的图片对比(img中心图,仓库图片路径列表)
+        if(图片序号){
+          log("图片序号=",图片序号)
+          // exit()
+          grids[x][y].click()
+          grids[图片序号[0]][图片序号[1]].click()
+          grids[x][y].click()
+          grids[图片序号[0]][图片序号[1]].click()
+          sleep(10)
+          grids[x][y].exist=false
+          grids[图片序号[0]][图片序号[1]].exist=false
+          //从仓库中清除这两张图片
+          files.remove(图片序号[2])
 
-        //从仓库中清除这两张图片
-        files.remove(图片序号[2])
 
-
-      }else{
-        grids[x][y].imgCenter仓库(img中心图)
+        }else{
+          grids[x][y].imgCenter仓库(img中心图)
+        }
       }
+
+
+
+
+
+
+
+
+      // grids[x][y].imgCenter仓库(img中心图)
+
     }
-
-
-
-
-
-
-
-
-    // grids[x][y].imgCenter仓库(img中心图)
-
   }
 }
 
@@ -271,15 +276,13 @@ function isImg1Img2Similar(img1,img2){
   // 改为提取图片给上5个点,如果5个点相似就判断两张图片相似
 
   point5FromImg1=point5FromImg(img1)
-  point5FromImg2=point555FromImg(img2)
   let count=0
   for(let i=0;i<point5FromImg1.length;i++){
     let color1=point5FromImg1[i]
     color1=colors.toString(color1)
-    let color2=point5FromImg2[i]
+    // log("img2=",img2)
     // log("color1=",color1)
-    // log("color2=\n",color2)
-    let result=isSimilarIn(color1, color2)
+    let result=findColor(img2, color1);
     if(result){count++;}
 
 
@@ -329,7 +332,6 @@ function outputObj(obj) {
 
 
 
-
 function point5FromImg(img){
   // 5  15  25
   let color1=images.pixel(img, 5, 5)
@@ -340,6 +342,9 @@ function point5FromImg(img){
 
   return [color1,color2,color3,color4,color5]
 }
+
+
+
 function point555FromImg(img){
   // 5  15  25
 
