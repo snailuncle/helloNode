@@ -14,7 +14,7 @@ ui.layout(
     </vertical>
     <vertical>
       <text textSize="16sp">仅适用1920*1080且安卓7的手机</text>
-      <text textSize="16sp">扫一扫,加微信</text>
+      <text textSize="16sp">扫一扫,加微信,没有注册码,每次只能使用5分钟</text>
       <img src="file:///sdcard/快手小游戏截图/二维码.jpg"/>
 
     </vertical>
@@ -47,13 +47,13 @@ ui.ok.on("click", ()=>{
   sleep(2000)
   var 注册码=ui.name.text()
   log("注册码=",注册码)
-  if(!(注册码.indexOf('X') != -1 && 注册码.indexOf('@') != -1)){toastLog('注册码不对,加微信获得注册码,\n使用版每次只能使用5分钟');
+  if(!(注册码.indexOf('X') != -1 && 注册码.indexOf('@') != -1 && 注册码.indexOf('$') != -1)){toastLog('注册码不对,加微信获得注册码,\n使用版每次只能使用5分钟');
   threads.start(function(){
     var timestamp1=new Date().getTime()
     while(1){
       sleep(1111)
       var timestamp2=new Date().getTime()
-      if(timestamp2-timestamp1 > 33000){
+      if(timestamp2-timestamp1 > 1000*60*5){
         toastLog("五分钟已到,停止运行")
         threads.shutDownAll()
       }
@@ -67,7 +67,7 @@ ui.ok.on("click", ()=>{
   sleep(3000)
   threads.start(function(){
     //设置剪贴板为支付宝
-
+    log("主人开始做运动")
     主人()
 
   })
@@ -193,133 +193,132 @@ function outputObj(obj) {
 
 
 
-let isMonkeyExist = false
-
-
-
-
-
-gamePackageName = "com.kwai.sogame";
-imgPath = "/sdcard/快手小游戏截图/";
-files.ensureDir(imgPath);
-
-// pageInfo=[
-//     ["黄色小指头",391,12,447,87,"某游戏"],
-//     ["最近对战",605,205,978,301,"主页"],
-//     ["已对",481,937,570,990,"pk结果"],
-//     ["打字",186,1724,272,1787,"聊天"]
-// ]
-
-
-
-
-
-
-//左上角第一个点的中心坐标234,658
-//左上角
-//大=343,655              109,0             0,109
-//中=308,657                73,0            0,73
-//小=272,660                38,0            0,39
-let bigMiddleSmall = [109, 73, 38]
-//圈圈颜色是一个列表,列表中每个元素是对象,对象有两个属性,colorName,colorValue
-
-
-let CircleColors = [{
-    colorName: "紫色",
-    colorValue: ["#BB30FD"]
-  },
-  {
-    colorName: "粉色",
-    colorValue: ["#FF76E8"]
-  },
-  {
-    colorName: "蓝色",
-    colorValue: ["#00C4FE"]
-  },
-  {
-    colorName: "绿色",
-    colorValue: ["#8BDA40"]
-  },
-  {
-    colorName: "橙色",
-    colorValue: ["#FF9C00"]
-  },
-  {
-    colorName: "红色",
-    colorValue: ["#F8395E"]
-  },
-  {
-    colorName: "黄色",
-    colorValue: ["#FFFF00", "#FBFE08"]
-  }
-]
-
-let NinePoints = [{
-    x: 235,
-    y: 656,
-    sequenceNumber: 1
-  }, {
-    x: 540,
-    y: 655,
-    sequenceNumber: 2
-  }, {
-    x: 844,
-    y: 655,
-    sequenceNumber: 3
-  },
-  {
-    x: 236,
-    y: 960,
-    sequenceNumber: 4
-  }, {
-    x: 541,
-    y: 962,
-    sequenceNumber: 5
-  }, {
-    x: 844,
-    y: 962,
-    sequenceNumber: 6
-  },
-  {
-    x: 235,
-    y: 1264,
-    sequenceNumber: 7
-  }, {
-    x: 540,
-    y: 1265,
-    sequenceNumber: 8
-  }, {
-    x: 845,
-    y: 1265,
-    sequenceNumber: 9
-  }
-
-]
-let ThreePoints = [{
-  x: 233,
-  y: 1720,
-  sequenceNumber: 1
-}, {
-  x: 537,
-  y: 1715,
-  sequenceNumber: 2
-}, {
-  x: 841,
-  y: 1717,
-  sequenceNumber: 3
-}]
-//圈圈消除参数
-let 放置时间 = 50
-let 放置后的间隔时间 = 250
-let mismatchTime = 1000
-
-
-
 
 
 
 
 function 主人() {
+
+  isMonkeyExist = false
+
+
+
+
+
+  gamePackageName = "com.kwai.sogame";
+  imgPath = "/sdcard/快手小游戏截图/";
+  files.ensureDir(imgPath);
+
+  // pageInfo=[
+  //     ["黄色小指头",391,12,447,87,"某游戏"],
+  //     ["最近对战",605,205,978,301,"主页"],
+  //     ["已对",481,937,570,990,"pk结果"],
+  //     ["打字",186,1724,272,1787,"聊天"]
+  // ]
+
+
+
+
+
+
+  //左上角第一个点的中心坐标234,658
+  //左上角
+  //大=343,655              109,0             0,109
+  //中=308,657                73,0            0,73
+  //小=272,660                38,0            0,39
+  bigMiddleSmall = [109, 73, 38]
+  //圈圈颜色是一个列表,列表中每个元素是对象,对象有两个属性,colorName,colorValue
+
+  CircleColors = [{
+      colorName: "紫色",
+      colorValue: ["#BB30FD"]
+    },
+    {
+      colorName: "粉色",
+      colorValue: ["#FF76E8"]
+    },
+    {
+      colorName: "蓝色",
+      colorValue: ["#00C4FE"]
+    },
+    {
+      colorName: "绿色",
+      colorValue: ["#8BDA40"]
+    },
+    {
+      colorName: "橙色",
+      colorValue: ["#FF9C00"]
+    },
+    {
+      colorName: "红色",
+      colorValue: ["#F8395E"]
+    },
+    {
+      colorName: "黄色",
+      colorValue: ["#FFFF00", "#FBFE08"]
+    }
+  ]
+
+  NinePoints = [{
+      x: 235,
+      y: 656,
+      sequenceNumber: 1
+    }, {
+      x: 540,
+      y: 655,
+      sequenceNumber: 2
+    }, {
+      x: 844,
+      y: 655,
+      sequenceNumber: 3
+    },
+    {
+      x: 236,
+      y: 960,
+      sequenceNumber: 4
+    }, {
+      x: 541,
+      y: 962,
+      sequenceNumber: 5
+    }, {
+      x: 844,
+      y: 962,
+      sequenceNumber: 6
+    },
+    {
+      x: 235,
+      y: 1264,
+      sequenceNumber: 7
+    }, {
+      x: 540,
+      y: 1265,
+      sequenceNumber: 8
+    }, {
+      x: 845,
+      y: 1265,
+      sequenceNumber: 9
+    }
+
+  ]
+  ThreePoints = [{
+    x: 233,
+    y: 1720,
+    sequenceNumber: 1
+  }, {
+    x: 537,
+    y: 1715,
+    sequenceNumber: 2
+  }, {
+    x: 841,
+    y: 1717,
+    sequenceNumber: 3
+  }]
+  //圈圈消除参数
+  放置时间 = 50
+  放置后的间隔时间 = 250
+  mismatchTime = 1000
+
+
   gameName = ui.sp1.selectedItem
   log("gameName=", gameName)
   while (1) {
@@ -352,6 +351,7 @@ function 主人() {
           sleep(1000);
           errorTime = errorTime + 1
           if (errorTime > 10) {
+            log('启动快手小游戏app,是快手小游戏,但界面不认识超过十次',gamePackageName)
             appOpen(gamePackageName)
             errorTime = 1
           }
@@ -360,6 +360,8 @@ function 主人() {
 
           log("当前包名不是快手小游戏\n当前包名是", "=" + currentPackage() + "=", "包名长度=", currentPackage().length)
           sleep(2000)
+          log('启动快手小游戏app,不是快手小游戏',gamePackageName)
+
           appOpen(gamePackageName)
         }
     }
@@ -492,11 +494,12 @@ function chatInterface() {
 }
 
 function appOpen(gamePackageName) {
-  toast("启动快手小游戏")
+  toastLog("启动快手小游戏0820")
   sleep(2000)
   if (currentPackage() == gamePackageName) {
 
   } else {
+    log("launch(gamePackageName)",gamePackageName)
     launch(gamePackageName);
     sleep(1000);
   }
@@ -507,6 +510,7 @@ function appOpen(gamePackageName) {
     } else {
       sleep(1000);
     }
+    log("appOpen(gamePackageName)","计数中",i)
   }
 
 
