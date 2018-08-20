@@ -2,23 +2,86 @@
 
 ui.layout(
   <vertical padding="16">
-      <horizontal>
-          <text textSize="16sp">选择游戏</text>
-          <spinner id="sp1" entries="消砖块|连连看|拯救萌宠|翻翻乐|圈圈消除|大圣来了"/>
-      </horizontal>
-      <button id="ok">确定</button>
+    <horizontal>
+      <text textSize="16sp">选择游戏</text>
+      <spinner id="sp1" entries="消砖块|连连看|拯救萌宠|翻翻乐|圈圈消除|大圣来了"/>
+      <button id="ok">运行脚本</button>
+    </horizontal>
+    <vertical>
+      <text w="*" gravity="center" color="#111111" size="16">注册码:加微信发送标识码,获得注册码</text>
+      <input id="name" w="*" h="50" hint="发送标识码,获取注册码" />
+      <button id="okma">点击获取标识码</button>
+    </vertical>
+    <vertical>
+      <text textSize="16sp">仅适用1920*1080且安卓7的手机</text>
+      <text textSize="16sp">扫一扫,加微信</text>
+      <img src="file:///sdcard/快手小游戏截图/二维码.jpg"/>
+
+    </vertical>
+
+
+
   </vertical>
 );
 
+ui.okma.on("click", () => {
+  标识码=device.fingerprint
+  log('手机标识码=',标识码)
+  setClip(标识码)
+});
+
+
+
 ui.ok.on("click", ()=>{
-
-
+  // outputObj(ui.ok)
+  // sleep(2000)
+  // exit()
+  支付宝="打开支付宝首页搜索“525333918”，即可领红包"
+  setClip(支付宝)
   var i = ui.sp1.getSelectedItemPosition();
+  // ui.ok.setDisabled(true)
+
+  threads.shutDownAll()
+
   toast("您的选择是" + ui.sp1.selectedItem);
+  sleep(2000)
+  var 注册码=ui.name.text()
+  log("注册码=",注册码)
+  if(!(注册码.indexOf('X') != -1 && 注册码.indexOf('@') != -1)){toastLog('注册码不对,加微信获得注册码,\n使用版每次只能使用5分钟');
   threads.start(function(){
+    var timestamp1=new Date().getTime()
+    while(1){
+      sleep(1111)
+      var timestamp2=new Date().getTime()
+      if(timestamp2-timestamp1 > 33000){
+        toastLog("五分钟已到,停止运行")
+        threads.shutDownAll()
+      }
+    }
+
+  })
+
+
+
+}
+  sleep(3000)
+  threads.start(function(){
+    //设置剪贴板为支付宝
+
     主人()
 
   })
+
+
+
+
+
+
+
+
+
+
+
 });
 
 
@@ -68,7 +131,13 @@ ui.ok.on("click", ()=>{
 // // exit()
 
 
-
+function outputObj(obj) {
+	var description = "";
+	for (var i in obj) {
+		description += i + " = " + obj[i] + "\n";
+	}
+	log(description);
+}
 
 
 
@@ -433,7 +502,7 @@ function appOpen(gamePackageName) {
   }
   for (let i = 0; i < 15; i++) {
 
-    if (whichPage() == "主页" || whichPage() == "主页副页") {
+    if (whichPage() == "主页" || whichPage() == "主页副页" || whichPage() == "pk结果" || whichPage() == "聊天") {
       return true;
     } else {
       sleep(1000);
